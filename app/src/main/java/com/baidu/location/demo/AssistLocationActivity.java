@@ -45,8 +45,6 @@ public class AssistLocationActivity extends Activity {
         // 设置是否允许定位，这里为了使用H5辅助定位，设置为false。
 	    //设置为true不一定会进行H5辅助定位，设置为true时只有H5定位失败后才会进行辅助定位
 //		webSettings.setGeolocationEnabled(false);
-
-
         contentWebView.setWebViewClient(new WebViewClient() {
 
             // 页面请求完成
@@ -62,21 +60,18 @@ public class AssistLocationActivity extends Activity {
 
         contentWebView.setWebChromeClient(new WebChromeClient() {
             // 处理javascript中的alert
-            public boolean onJsAlert(WebView view, String url, String message,
-                                     final JsResult result) {
+            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
                 return true;
             };
 
             // 处理javascript中的confirm
-            public boolean onJsConfirm(WebView view, String url,
-                                       String message, final JsResult result) {
+            public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
                 return true;
             };
 
             // 处理定位权限请求
             @Override
-            public void onGeolocationPermissionsShowPrompt(String origin,
-                                                           GeolocationPermissions.Callback callback) {
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
                 callback.invoke(origin, true, false);
                 super.onGeolocationPermissionsShowPrompt(origin, callback);
             }

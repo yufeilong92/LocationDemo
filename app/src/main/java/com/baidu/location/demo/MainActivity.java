@@ -35,7 +35,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.function_list);
         FunctionList = (ListView) findViewById(R.id.functionList);
         FunctionList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, getData()));
-
         // after andrioid m,must request Permiision on runtime
         getPersimmions();
     }
@@ -69,14 +68,14 @@ public class MainActivity extends Activity {
 
     @TargetApi(23)
     private boolean addPermission(ArrayList<String> permissionsList, String permission) {
-        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) { // 如果应用没有获得对应权限,则添加到列表中,准备批量申请
+        // 如果应用没有获得对应权限,则添加到列表中,准备批量申请
+        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
             if (shouldShowRequestPermissionRationale(permission)) {
                 return true;
             } else {
                 permissionsList.add(permission);
                 return false;
             }
-
         } else {
             return true;
         }
@@ -87,7 +86,6 @@ public class MainActivity extends Activity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         // TODO Auto-generated method stub
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
     }
 
     @Override
@@ -132,6 +130,9 @@ public class MainActivity extends Activity {
                         TargetClass = LocationNotifyActivity.class;
                         break;
                     case 10:
+                        TargetClass = SceneLocationActivity.class;
+                        break;
+                    case 11:
                         TargetClass = QuestActivity.class;
                         break;
                     default:
@@ -147,7 +148,6 @@ public class MainActivity extends Activity {
     }
 
     private List<String> getData() {
-
         List<String> data = new ArrayList<String>();
         data.add("基础定位功能");
         data.add("配置定位参数");
@@ -159,9 +159,8 @@ public class MainActivity extends Activity {
         data.add("android 8.0/9.0后台定位示例");
         data.add("H5辅助定位");
         data.add("位置提醒");
+        data.add("场景定位");
         data.add("常见问题说明");
-
-
         return data;
     }
 }

@@ -92,8 +92,8 @@ public class LocationNotifyActivity extends Activity implements BaiduMap.OnMapCl
     }
 
     @Override
-    public boolean onMapPoiClick(MapPoi mapPoi) {
-        return false;
+    public void onMapPoiClick(MapPoi mapPoi) {
+
     }
 
     /**
@@ -111,8 +111,6 @@ public class LocationNotifyActivity extends Activity implements BaiduMap.OnMapCl
             // 添加圆
             addCircle(latLng, radius);
         }
-
-
     }
 
     /**
@@ -136,9 +134,7 @@ public class LocationNotifyActivity extends Activity implements BaiduMap.OnMapCl
                 startNotify.setText("开启提醒");
             }
         }
-
     }
-
 
     private Handler notifyHandler = new Handler() {
 
@@ -154,7 +150,6 @@ public class LocationNotifyActivity extends Activity implements BaiduMap.OnMapCl
             } catch (NumberFormatException e) {
                 e.printStackTrace(System.err);
             }
-
         }
 
     };
@@ -248,5 +243,4 @@ public class LocationNotifyActivity extends Activity implements BaiduMap.OnMapCl
                 .radius(radius);
         mBaiduMap.addOverlay(ooCircle);
     }
-
 }

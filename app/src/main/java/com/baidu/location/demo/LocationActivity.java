@@ -4,20 +4,18 @@ import com.baidu.baidulocationdemo.R;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.Poi;
+import com.baidu.location.PoiRegion;
 import com.baidu.location.service.LocationService;
 import com.baidu.location.service.Utils;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /***
  * 单点定位示例，用来展示基本的定位结果，配置在LocationService.java中
@@ -32,7 +30,6 @@ public class LocationActivity extends Activity {
     private TextView LocationResult;
     private TextView LocationDiagnostic;
     private Button startLocation;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +65,6 @@ public class LocationActivity extends Activity {
                                 }
                             }
                         });
-
                     }
                 }).start();
             }
@@ -102,7 +98,6 @@ public class LocationActivity extends Activity {
             locationService.setLocationOption(locationService.getDefaultLocationClientOption());
         } else if (type == 1) {
             locationService.start();
-//            locationService.setLocationOption(locationService.getOption());
         }
         startLocation.setOnClickListener(new OnClickListener() {
 
@@ -114,7 +109,6 @@ public class LocationActivity extends Activity {
                     startLocation.setText(getString(R.string.stoplocation));
                 } else {
                     locationService.stop();
-
                     startLocation.setText(getString(R.string.startlocation));
                 }
             }
@@ -152,12 +146,14 @@ public class LocationActivity extends Activity {
                 sb.append(location.getLocTypeDescription());
                 sb.append("\nlatitude : ");// 纬度
                 sb.append(location.getLatitude());
-                sb.append("\nlontitude : ");// 经度
+                sb.append("\nlongtitude : ");// 经度
                 sb.append(location.getLongitude());
                 sb.append("\nradius : ");// 半径
                 sb.append(location.getRadius());
                 sb.append("\nCountryCode : ");// 国家码
                 sb.append(location.getCountryCode());
+                sb.append("\nProvince : ");// 获取省份
+                sb.append(location.getProvince());
                 sb.append("\nCountry : ");// 国家名称
                 sb.append(location.getCountry());
                 sb.append("\ncitycode : ");// 城市编码
@@ -166,10 +162,14 @@ public class LocationActivity extends Activity {
                 sb.append(location.getCity());
                 sb.append("\nDistrict : ");// 区
                 sb.append(location.getDistrict());
+                sb.append("\nTown : ");// 获取镇信息
+                sb.append(location.getTown());
                 sb.append("\nStreet : ");// 街道
                 sb.append(location.getStreet());
                 sb.append("\naddr : ");// 地址信息
                 sb.append(location.getAddrStr());
+                sb.append("\nStreetNumber : ");// 获取街道号码
+                sb.append(location.getStreetNumber());
                 sb.append("\nUserIndoorState: ");// *****返回用户室内外判断结果*****
                 sb.append(location.getUserIndoorState());
                 sb.append("\nDirection(not all devices have value): ");
@@ -180,10 +180,23 @@ public class LocationActivity extends Activity {
                 if (location.getPoiList() != null && !location.getPoiList().isEmpty()) {
                     for (int i = 0; i < location.getPoiList().size(); i++) {
                         Poi poi = (Poi) location.getPoiList().get(i);
-                        sb.append(poi.getName() + ";");
+                        sb.append("poiName:");
+                        sb.append(poi.getName() + ", ");
+                        sb.append("poiTag:");
+                        sb.append(poi.getTags() + "\n");
                     }
                 }
-                sb.append("\nSDK版本: ");
+                if (location.getPoiRegion() != null) {
+                    sb.append("PoiRegion: ");// 返回定位位置相对poi的位置关系，仅在开发者设置需要POI信息时才会返回，在网络不通或无法获取时有可能返回null
+                    PoiRegion poiRegion = location.getPoiRegion();
+                    sb.append("DerectionDesc:"); // 获取POIREGION的位置关系，ex:"内"
+                    sb.append(poiRegion.getDerectionDesc() + "; ");
+                    sb.append("Name:"); // 获取POIREGION的名字字符串
+                    sb.append(poiRegion.getName() + "; ");
+                    sb.append("Tags:"); // 获取POIREGION的类型
+                    sb.append(poiRegion.getTags() + "; ");
+                    sb.append("\nSDK版本: ");
+                }
                 sb.append(locationService.getSDKVersion()); // 获取SDK版本
                 if (location.getLocType() == BDLocation.TypeGpsLocation) {// GPS定位结果
                     sb.append("\nspeed : ");
@@ -239,56 +252,44 @@ public class LocationActivity extends Activity {
             super.onLocDiagnosticMessage(locType, diagnosticType, diagnosticMessage);
             int tag = 2;
             StringBuffer sb = new StringBuffer(256);
+            sb.append("诊断结果: ");
             if (locType == BDLocation.TypeNetWorkLocation) {
                 if (diagnosticType == 1) {
-                    sb.append("诊断结果: ");
                     sb.append("网络定位成功，没有开启GPS，建议打开GPS会更好");
-                    sb.append(diagnosticMessage);
+                    sb.append("\n" + diagnosticMessage);
                 } else if (diagnosticType == 2) {
-                    sb.append("诊断结果: ");
                     sb.append("网络定位成功，没有开启Wi-Fi，建议打开Wi-Fi会更好");
-                    sb.append(diagnosticMessage);
+                    sb.append("\n" + diagnosticMessage);
                 }
             } else if (locType == BDLocation.TypeOffLineLocationFail) {
                 if (diagnosticType == 3) {
-                    sb.append("诊断结果: ");
                     sb.append("定位失败，请您检查您的网络状态");
-                    sb.append(diagnosticMessage);
+                    sb.append("\n" + diagnosticMessage);
                 }
             } else if (locType == BDLocation.TypeCriteriaException) {
                 if (diagnosticType == 4) {
-                    sb.append("诊断结果: ");
                     sb.append("定位失败，无法获取任何有效定位依据");
-                    sb.append(diagnosticMessage);
+                    sb.append("\n" + diagnosticMessage);
                 } else if (diagnosticType == 5) {
-                    sb.append("诊断结果: ");
                     sb.append("定位失败，无法获取有效定位依据，请检查运营商网络或者Wi-Fi网络是否正常开启，尝试重新请求定位");
                     sb.append(diagnosticMessage);
                 } else if (diagnosticType == 6) {
-                    sb.append("诊断结果: ");
                     sb.append("定位失败，无法获取有效定位依据，请尝试插入一张sim卡或打开Wi-Fi重试");
-                    sb.append(diagnosticMessage);
+                    sb.append("\n" + diagnosticMessage);
                 } else if (diagnosticType == 7) {
-                    sb.append("诊断结果: ");
                     sb.append("定位失败，飞行模式下无法获取有效定位依据，请关闭飞行模式重试");
-                    sb.append(diagnosticMessage);
+                    sb.append("\n" + diagnosticMessage);
                 } else if (diagnosticType == 9) {
-                    sb.append("诊断结果: ");
                     sb.append("定位失败，无法获取任何有效定位依据");
-                    sb.append(diagnosticMessage);
+                    sb.append("\n" + diagnosticMessage);
                 }
             } else if (locType == BDLocation.TypeServerError) {
                 if (diagnosticType == 8) {
-                    sb.append("诊断结果: ");
                     sb.append("定位失败，请确认您定位的开关打开状态，是否赋予APP定位权限");
+                    sb.append("\n" + diagnosticMessage);
                 }
             }
             logMsg(sb.toString(), tag);
-
-
         }
     };
-
 }
-
-

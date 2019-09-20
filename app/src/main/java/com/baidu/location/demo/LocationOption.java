@@ -23,6 +23,7 @@ import android.widget.RadioGroup;
  *
  */
 public class LocationOption extends Activity{
+
 	private RadioGroup selectLocMode,selectcoord;
 	private EditText scanSpan;
 	private CheckBox geolocation,poi,describe,director;
@@ -126,8 +127,6 @@ public class LocationOption extends Activity{
 				locIntent.putExtra("from", 1);
 				LocationOption.this.startActivity(locIntent);
 			}
-			
 		});
 	}
-	
 }

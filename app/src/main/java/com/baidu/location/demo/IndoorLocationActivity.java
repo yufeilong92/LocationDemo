@@ -43,22 +43,17 @@ import com.baidu.mapapi.model.LatLng;
 public class IndoorLocationActivity extends Activity {
 
     // 定位相关
-    LocationClient mLocClient;
-    public MyLocationListenner myListener = new MyLocationListenner();
-    private LocationMode mCurrentMode;
-    BitmapDescriptor mCurrentMarker;
+    private LocationClient mLocClient;
+    private MyLocationListenner myListener = new MyLocationListenner();
 
-    MapView mMapView;
-    BaiduMap mBaiduMap;
+    private MapView mMapView;
+    private BaiduMap mBaiduMap;
 
-    StripListView stripListView;
-    BaseStripAdapter mFloorListAdapter;
-    MapBaseIndoorMapInfo mMapBaseIndoorMapInfo = null;
-    static Context mContext;
+    private StripListView stripListView;
+    private BaseStripAdapter mFloorListAdapter;
+    private MapBaseIndoorMapInfo mMapBaseIndoorMapInfo = null;
     // UI相关
-
-    Button requestLocButton;
-    boolean isFirstLoc = true; // 是否首次定位
+    private boolean isFirstLoc = true; // 是否首次定位
 
     private static final int paddingLeft = 0;
     private static final int paddingTop = 0;
@@ -70,44 +65,12 @@ public class IndoorLocationActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        mContext = this;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         RelativeLayout layout = new RelativeLayout(this);
         
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View mainview = inflater.inflate(R.layout.activity_location, null);
         layout.addView(mainview);
-
-        requestLocButton = (Button) mainview.findViewById(R.id.button1);
-        mCurrentMode = LocationMode.NORMAL;
-        requestLocButton.setText("普通");
-        OnClickListener btnClickListener = new OnClickListener() {
-            public void onClick(View v) {
-                switch (mCurrentMode) {
-                    case NORMAL:
-                        requestLocButton.setText("跟随");
-                        mCurrentMode = LocationMode.FOLLOWING;
-                        mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
-                                mCurrentMarker));
-                        break;
-                    case COMPASS:
-                        requestLocButton.setText("普通");
-                        mCurrentMode = LocationMode.NORMAL;
-                        mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
-                                mCurrentMarker));
-                        break;
-                    case FOLLOWING:
-                        requestLocButton.setText("罗盘");
-                        mCurrentMode = LocationMode.COMPASS;
-                        mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(mCurrentMode, true,
-                                mCurrentMarker));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-        requestLocButton.setOnClickListener(btnClickListener);
 
         // 地图初始化
         mMapView = (MapView) mainview.findViewById(R.id.bmapView);
@@ -136,7 +99,6 @@ public class IndoorLocationActivity extends Activity {
             public void onBaseIndoorMapMode(boolean b, MapBaseIndoorMapInfo mapBaseIndoorMapInfo) {
                 if (b == false || mapBaseIndoorMapInfo == null) {
                     stripListView.setVisibility(View.INVISIBLE);
-
                     return;
                 }
 
@@ -153,7 +115,6 @@ public class IndoorLocationActivity extends Activity {
                 addView(mMapView);
             }
         });
-        
     }
 
     /**
@@ -212,7 +173,6 @@ public class IndoorLocationActivity extends Activity {
                         Log.i("indoor", "start indoormod");
                     }
                 }
-
             } else {
                 StringBuffer sb = new StringBuffer(256);
                 sb.append("当前位置结果：");
@@ -233,9 +193,6 @@ public class IndoorLocationActivity extends Activity {
             }
         }
 
-        public void onReceivePoi(BDLocation poiLocation) {
-        }
-        
         public void onConnectHotSpotMessage(String s, int i){
         }
     }
@@ -269,7 +226,6 @@ public class IndoorLocationActivity extends Activity {
      * @param mapView 地图控件
      */
     private void addView(MapView mapView) {
-
         mTextView = new TextView(this);
         mTextView.setTextSize(15.0f);
         mTextView.setTextColor(Color.BLACK);
@@ -285,7 +241,5 @@ public class IndoorLocationActivity extends Activity {
         builder.align(MapViewLayoutParams.ALIGN_LEFT, MapViewLayoutParams.ALIGN_BOTTOM);
         mBaiduMap.setViewPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
         mapView.addView(mTextView, builder.build());
-
     }
-
 }

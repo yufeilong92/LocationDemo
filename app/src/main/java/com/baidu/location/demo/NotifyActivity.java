@@ -86,8 +86,8 @@ public class NotifyActivity extends Activity{
             super.handleMessage(msg);
             mNotifyLister.SetNotifyLocation(latitude,longtitude, 3000,mLocationClient.getLocOption().getCoorType());//4个参数代表要位置提醒的点的坐标，具体含义依次为：纬度，经度，距离范围，坐标系类型(gcj02,gps,bd09,bd09ll)
         }
-
     };
+
     public class NotiftLocationListener extends BDAbstractLocationListener {
 
         @Override
@@ -97,8 +97,8 @@ public class NotifyActivity extends Activity{
             latitude = location.getLatitude();
             notifyHandler.sendEmptyMessage(0);
         }
-
     }
+
     public class NotifyLister extends BDNotifyListener{
         public void onNotify(BDLocation mlocation, float distance){
             mVibrator.vibrate(1000);//振动提醒已到设定位置附近

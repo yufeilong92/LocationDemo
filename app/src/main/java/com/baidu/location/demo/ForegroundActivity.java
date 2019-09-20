@@ -55,7 +55,6 @@ public class ForegroundActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.foreground);
-
         initViews();
 
         // 定位初始化
@@ -67,8 +66,6 @@ public class ForegroundActivity extends Activity {
         mOption.setOpenGps(true);
         mClient.setLocOption(mOption);
         mClient.registerLocationListener(myLocationListener);
-
-
 
         //设置后台定位
         //android8.0及以上使用NotificationUtils
@@ -106,8 +103,6 @@ public class ForegroundActivity extends Activity {
         mClient.unRegisterLocationListener(myLocationListener);
         // 停止定位sdk
         mClient.stop();
-
-
     }
 
     private void initViews(){
@@ -168,7 +163,6 @@ public class ForegroundActivity extends Activity {
             if (null != mTextView){
                 mTextView.append(sb.toString());
             }
-
         }
     }
 
@@ -178,7 +172,6 @@ public class ForegroundActivity extends Activity {
      * @param mapView 地图控件
      */
     private void addView(MapView mapView) {
-
         mTextView = new TextView(this);
         mTextView.setTextSize(15.0f);
         mTextView.setTextColor(Color.BLACK);
@@ -193,7 +186,6 @@ public class ForegroundActivity extends Activity {
         builder.align(MapViewLayoutParams.ALIGN_LEFT, MapViewLayoutParams.ALIGN_BOTTOM);
         mBaiduMap.setViewPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
         mapView.addView(mTextView, builder.build());
-
     }
 
     @Override
