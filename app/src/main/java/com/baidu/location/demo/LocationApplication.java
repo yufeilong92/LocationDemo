@@ -28,6 +28,6 @@ public class LocationApplication extends Application {
         locationService = new LocationService(getApplicationContext());
         mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
         SDKInitializer.initialize(getApplicationContext());
-        SDKInitializer.setCoordType(CoordType.GCJ02);
+        SDKInitializer.setCoordType(CoordType.BD09LL);
     }
 }

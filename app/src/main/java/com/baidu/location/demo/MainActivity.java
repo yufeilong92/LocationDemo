@@ -118,7 +118,7 @@ public class MainActivity extends Activity {
                         TargetClass = IndoorLocationActivity.class;
                         break;
                     case 6:
-                        TargetClass = IsHotWifiActivity.class;
+                        TargetClass = SceneLocationActivity.class;
                         break;
                     case 7:
                         TargetClass = ForegroundActivity.class;
@@ -130,7 +130,7 @@ public class MainActivity extends Activity {
                         TargetClass = LocationNotifyActivity.class;
                         break;
                     case 10:
-                        TargetClass = SceneLocationActivity.class;
+                        TargetClass = IsHotWifiActivity.class;
                         break;
                     case 11:
                         TargetClass = QuestActivity.class;
@@ -155,11 +155,11 @@ public class MainActivity extends Activity {
         data.add("连续定位示例");
         data.add("位置消息提醒");
         data.add("室内定位功能");
-        data.add("判断移动热点");
+        data.add("场景定位");
         data.add("android 8.0/9.0后台定位示例");
         data.add("H5辅助定位");
         data.add("位置提醒");
-        data.add("场景定位");
+        data.add("判断移动热点");
         data.add("常见问题说明");
         return data;
     }
