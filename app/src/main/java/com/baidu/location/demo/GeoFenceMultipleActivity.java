@@ -48,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * 新版地理围栏综合展示
+ * 地理围栏
  */
 public class GeoFenceMultipleActivity extends CheckPermissionsActivity
         implements
@@ -84,9 +84,6 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
      * 示例中是为了显示当前的位置，在实际使用中，单独的地理围栏可以不使用定位接口
      */
     private LocationClient mlocationClient;
-    // private OnLocationChangedListener mListener;
-    private LocationClientOption mLocationOption;
-
     private MapView mMapView;
     private BaiduMap mBdMap;
     // 中心点坐标
@@ -545,8 +542,8 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
     }
 
     /**
-     * 接收触发围栏后的广播,当添加围栏成功之后，会立即对所有围栏状态进行一次侦测，如果当前状态与用户设置的触发行为相符将会立即触发一次围栏广播；
-     * 只有当触发围栏之后才会收到广播,对于同一触发行为只会发送一次广播不会重复发送，除非位置和围栏的关系再次发生了改变。
+     * 接收触发围栏后的广播,当添加围栏成功之后，会立即对所有围栏状态进行一次侦测，只会发送一次围栏和位置之间的初始状态；
+     * 当触发围栏之后也会收到广播,对于同一触发行为只会发送一次广播不会重复发送，除非位置和围栏的关系再次发生了改变。
      */
     private BroadcastReceiver mGeoFenceReceiver = new BroadcastReceiver() {
         @Override
@@ -813,7 +810,7 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
     }
 
 
-    public class MyLocationListener extends BDLocationListener {
+    public class MyLocationListener extends BDAbstractLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
             // mapView 销毁后不在处理新接收的位置
