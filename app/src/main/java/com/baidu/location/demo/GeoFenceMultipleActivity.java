@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -449,8 +450,7 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
             case R.id.rb_nearbyFence:
                 centerLatLng = point;
                 addCenterMarker(centerLatLng);
-                tvGuide.setBackgroundColor(
-                        getResources().getColor(R.color.color_gray_transparent));
+                tvGuide.setBackgroundColor(Color.parseColor("#33333333"));
                 tvGuide.setText("选中的坐标：" + centerLatLng.longitude + ","
                         + centerLatLng.latitude);
                 break;
@@ -460,8 +460,7 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
                 }
                 polygonPoints.add(point);
                 addPolygonMarker(point);
-                tvGuide.setBackgroundColor(
-                        getResources().getColor(R.color.color_gray_transparent));
+                tvGuide.setBackgroundColor(Color.parseColor("#33333333"));
                 tvGuide.setText("已选择" + polygonPoints.size() + "个点");
                 if (polygonPoints.size() >= 3) {
                     btAddFence.setEnabled(true);
