@@ -21,16 +21,15 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.baidulocationdemo.R;
 import com.baidu.geofence.GeoFence;
 import com.baidu.geofence.GeoFenceClient;
 import com.baidu.geofence.GeoFenceListener;
 import com.baidu.geofence.model.DPoint;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.location.debuglog.Log;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.CircleOptions;
@@ -437,8 +436,8 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
     }
 
     @Override
-    public boolean onMapPoiClick(MapPoi mapPoi) {
-        return false;
+    public void onMapPoiClick(MapPoi mapPoi) {
+
     }
 
     @Override
@@ -482,7 +481,6 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
                 flag3 = isChecked;
                 break;
             default:
-                Log.d("值是", "值" + activatesAction);
                 break;
         }
         if (flag1) {
@@ -506,7 +504,6 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
         if (flag1 && flag2 && flag3) {
             activatesAction = GeoFenceClient.GEOFENCE_IN_OUT_STAYED;
         }
-        Log.d("activatesAction", "值" + activatesAction);
         if (null != fenceClient) {
             fenceClient.setActivateAction(activatesAction);
         }
@@ -637,13 +634,13 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
     private void resetViewRound() {
         etRadius.setVisibility(View.VISIBLE);
         etRadius.setHint("围栏半径");
-        tvGuide.setBackgroundColor(getResources().getColor(R.color.color_red));
+        tvGuide.setBackgroundColor(Color.parseColor("#ff0000"));
         tvGuide.setText("请点击地图选择围栏的中心点");
         tvGuide.setVisibility(View.VISIBLE);
     }
 
     private void resetViewPolygon() {
-        tvGuide.setBackgroundColor(getResources().getColor(R.color.color_red));
+        tvGuide.setBackgroundColor(Color.parseColor("#ff0000"));
         tvGuide.setText("请点击地图选择围栏的边界点,至少3个点");
         tvGuide.setVisibility(View.VISIBLE);
         tvGuide.setVisibility(View.VISIBLE);

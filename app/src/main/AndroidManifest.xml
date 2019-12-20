@@ -28,6 +28,11 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
     <!-- android 9.0上使用前台服务，需要添加权限 -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- 用于读取手机当前的状态 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- 读取缓存数据 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
 
     <application
         android:name="com.baidu.location.demo.LocationApplication"
@@ -62,6 +67,8 @@
         <activity android:name="com.baidu.location.demo.LocationAutoNotify" />
         <activity android:name="com.baidu.location.demo.IndoorLocationActivity" />
         <activity android:name="com.baidu.location.demo.ForegroundActivity" />
+        <activity android:name="com.baidu.location.demo.GeoFenceMultipleActivity" />
+        <activity android:name="com.baidu.location.demo.CheckPermissionsActivity" />
         <activity android:name="com.baidu.location.demo.IsHotWifiActivity" />
         <activity android:name="com.baidu.location.demo.AssistLocationActivity" />
         <activity android:name="com.baidu.location.demo.SceneLocationActivity" />
