@@ -13,9 +13,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,9 +37,16 @@ import java.util.TimerTask;
  * 仿真定位
  */
 public class MockLocationActivity extends Activity {
+
     private TextView tvResult;
     private Button btnSwitchMock;
     private Button btnSwitchLoc;
+    private Button btnAddMockData;
+    private Button btnRemoveMockData;
+    private EditText etLat;
+    private EditText etLng;
+    private EditText etAlt;
+    private LinearLayout llLatLng;
 
     private Timer timer;
     private String providerName;
@@ -53,30 +63,106 @@ public class MockLocationActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mock_location);
 
+        initView();
+
         providerName = LocationManager.GPS_PROVIDER;
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         mLocationClient = new LocationClient(getApplicationContext());
         mLocationClient.registerLocationListener(new MyLocationListener());
 
-        addMockData(); // 往mockdata里添加一系列模拟位置数据
+        initBtnListener();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopUpdateMockLocation();
+        if (null != mLocationClient) {
+            mLocationClient.stop();
+            mLocationClient = null;
+            mLocationManager = null;
+            mockData.clear();
+            mockData = null;
+        }
+    }
+
+
+    private void initView() {
         btnSwitchMock = findViewById(R.id.btn_switch_mock);
         btnSwitchLoc = findViewById(R.id.btn_switch_loc);
+        btnAddMockData = findViewById(R.id.btn_add);
+        btnRemoveMockData = findViewById(R.id.btn_remove);
         tvResult = findViewById(R.id.tv_result);
+        etLat = findViewById(R.id.et_lat);
+        etLng = findViewById(R.id.et_lng);
+        etAlt = findViewById(R.id.et_alt);
+        llLatLng = findViewById(R.id.ll_add_mock_data);
+    }
 
+    private void initBtnListener() {
 
         btnSwitchLoc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isStart) {
                     btnSwitchLoc.setText("开始定位");
+                    llLatLng.setVisibility(View.VISIBLE);
+                    tvResult.setVisibility(View.GONE);
                     isStart = false;
                     mLocationClient.stop();
                 } else {
+                    if (mockData != null && mockData.isEmpty()) {
+                        showToast("请先添加模拟位置数据");
+                        return;
+                    }
                     btnSwitchLoc.setText("停止定位");
+                    llLatLng.setVisibility(View.GONE);
+                    tvResult.setVisibility(View.VISIBLE);
                     isStart = true;
                     setLocationOption();
                     mLocationClient.start();
+                }
+            }
+        });
+
+        btnAddMockData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isStart) {
+                    showToast("请先停止定位,再添加模拟位置数据");
+                    return;
+                }
+                if (!TextUtils.isEmpty(etLat.getText().toString())
+                        && !TextUtils.isEmpty(etLng.getText().toString())
+                        && !TextUtils.isEmpty(etAlt.getText().toString())) {
+                    Location location = new Location("mock");
+                    double lat = Double.parseDouble(etLat.getText().toString());
+                    double lng = Double.parseDouble(etLng.getText().toString());
+                    double alt = Double.parseDouble(etAlt.getText().toString());
+                    location.setLatitude(lat);
+                    location.setLongitude(lng);
+                    location.setAltitude(alt);
+                    if (mockData != null) {
+                        mockData.add(location);
+                        showToast("添加成功");
+                        etLat.setText("");
+                        etLng.setText("");
+                        etAlt.setText("");
+                    }
+                } else {
+                    showToast("请先输入模拟位置的经纬度和高度");
+                }
+            }
+        });
+
+        btnRemoveMockData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mockData && !mockData.isEmpty()) {
+                    mockData.clear();
+                } else {
+                    showToast("您还未添加模拟位置数据");
                 }
             }
         });
@@ -85,9 +171,11 @@ public class MockLocationActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!isStart) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "请先启动定位，再开始仿真位置", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    if (null != mockData && !mockData.isEmpty()) {
+                        showToast("请先启动定位，再开始仿真位置");
+                    } else {
+                        showToast("请先添加模拟位置数据，启动定位，再开始仿真位置");
+                    }
                     return;
                 }
                 if (hasAddTestProvider()) {
@@ -105,36 +193,6 @@ public class MockLocationActivity extends Activity {
                 }
             }
         });
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        stopUpdateMockLocation();
-        if (null != mLocationClient) {
-            mLocationClient.stop();
-            mLocationClient = null;
-            mLocationManager = null;
-            mockData.clear();
-            mockData = null;
-        }
-    }
-
-    // 添加模拟位置数据
-    private void addMockData() {
-        double lat = 0;
-        for (int lng = 0; lng <= 180; lng++) {
-            Location location = new Location("mock");
-            if (lat > 90) {
-                location.setLatitude(90);
-            } else {
-                lat++;
-                location.setLatitude(lat);
-            }
-            location.setLongitude(lng);
-            location.setAltitude(lng);
-            mockData.add(location);
-        }
     }
 
 
@@ -163,7 +221,9 @@ public class MockLocationActivity extends Activity {
         return "";
     }
 
-    // 启动仿真定位
+    /**
+     * 启动仿真定位
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void startUpdateMockLocation() {
 
@@ -196,7 +256,9 @@ public class MockLocationActivity extends Activity {
 
     }
 
-    // 停止仿真定位
+    /**
+     * 停止仿真定位
+     */
     private void stopUpdateMockLocation() {
         if (timer == null) {
 
@@ -205,6 +267,10 @@ public class MockLocationActivity extends Activity {
         timer.cancel();
         timer.purge();
         timer = null;
+        if (null != mLocationClient) {
+            mLocationClient.stop();
+            mLocationClient.start();
+        }
     }
 
     private void pushLocation(Location mockloc) {
@@ -235,6 +301,12 @@ public class MockLocationActivity extends Activity {
 
             }
         }
+    }
+
+    private void showToast(String showText) {
+        Toast toast = Toast.makeText(getApplicationContext(), showText, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 
     private boolean hasAddTestProvider() {
@@ -287,7 +359,7 @@ public class MockLocationActivity extends Activity {
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true);
         option.setLocationNotify(true); // 可选，设置是否当GPS有效时按照1S/1次频率输出GPS结果，默认false
-        option.setScanSpan(1000);
+        option.setScanSpan(2000);
         option.setOnceLocation(false);
         option.setNeedNewVersionRgc(true);
         option.setEnableSimulateGps(true);
