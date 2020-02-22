@@ -161,6 +161,7 @@ public class MockLocationActivity extends Activity {
             public void onClick(View v) {
                 if (null != mockData && !mockData.isEmpty()) {
                     mockData.clear();
+                    showToast("删除成功");
                 } else {
                     showToast("您还未添加模拟位置数据");
                 }
