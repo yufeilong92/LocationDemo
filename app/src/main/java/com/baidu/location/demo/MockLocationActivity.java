@@ -77,14 +77,18 @@ public class MockLocationActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        stopUpdateMockLocation();
+
         if (null != mLocationClient) {
             mLocationClient.stop();
             mLocationClient = null;
-            mLocationManager = null;
+        }
+
+        if (null != mockData) {
             mockData.clear();
             mockData = null;
         }
+
+        mLocationManager = null;
     }
 
 
@@ -262,7 +266,6 @@ public class MockLocationActivity extends Activity {
      */
     private void stopUpdateMockLocation() {
         if (timer == null) {
-
             return;
         }
         timer.cancel();
