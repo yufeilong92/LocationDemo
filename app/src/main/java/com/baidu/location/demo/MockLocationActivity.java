@@ -84,6 +84,7 @@ public class MockLocationActivity extends Activity {
         }
 
         if (null != mLocationManager) {
+            mLocationManager.clearTestProviderEnabled(providerName);
             mLocationManager.removeTestProvider(providerName);
             mLocationManager = null;
         }
