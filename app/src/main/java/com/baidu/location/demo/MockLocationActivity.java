@@ -83,12 +83,16 @@ public class MockLocationActivity extends Activity {
             mLocationClient = null;
         }
 
+        if (null != mLocationManager) {
+            mLocationManager.removeTestProvider(providerName);
+            mLocationManager = null;
+        }
+
         if (null != mockData) {
             mockData.clear();
             mockData = null;
         }
 
-        mLocationManager = null;
     }
 
 
@@ -140,7 +144,7 @@ public class MockLocationActivity extends Activity {
                 if (!TextUtils.isEmpty(etLat.getText().toString())
                         && !TextUtils.isEmpty(etLng.getText().toString())
                         && !TextUtils.isEmpty(etAlt.getText().toString())) {
-                    Location location = new Location("mock");
+                    Location location = new Location("gps");
                     double lat = Double.parseDouble(etLat.getText().toString());
                     double lng = Double.parseDouble(etLng.getText().toString());
                     double alt = Double.parseDouble(etAlt.getText().toString());
@@ -247,7 +251,7 @@ public class MockLocationActivity extends Activity {
                             index++;
                         }
                         temp.setTime(System.currentTimeMillis());
-                        temp.setAccuracy(10);
+                        temp.setAccuracy(10.0f);
                         temp.setElapsedRealtimeNanos(SystemClock.elapsedRealtimeNanos());
                         pushLocation(temp);
                     }
@@ -302,7 +306,6 @@ public class MockLocationActivity extends Activity {
                 } catch (Exception e2) {
 
                 }
-
             }
         }
     }
@@ -314,7 +317,6 @@ public class MockLocationActivity extends Activity {
     }
 
     private boolean hasAddTestProvider() {
-
         boolean hasAddTestProvider = false;
         boolean canMockPosition = (Settings.Secure.getInt(getContentResolver(),
                 Settings.Secure.ALLOW_MOCK_LOCATION, 0) != 0)
@@ -340,7 +342,6 @@ public class MockLocationActivity extends Activity {
                     mLocationManager.addTestProvider(providerName, true, true, false, false, true, true, true
                             , Criteria.POWER_HIGH, Criteria.ACCURACY_FINE);
                 }
-
 
                 mLocationManager.setTestProviderEnabled(providerName, true);
                 mLocationManager.setTestProviderStatus(providerName,
