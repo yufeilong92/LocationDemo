@@ -72,6 +72,10 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
     private EditText etCity;
     private EditText etFenceSize;
 
+    private EditText etInNum;
+    private EditText etOutNum;
+    private EditText etStayNum;
+
     private CheckBox cbAlertIn;
     private CheckBox cbAlertOut;
     private CheckBox cbAldertStated;
@@ -132,6 +136,10 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
         etPoiType = findViewById(R.id.et_poitype);
         etKeyword = findViewById(R.id.et_keyword);
         etFenceSize = findViewById(R.id.et_fenceSize);
+
+        etInNum = findViewById(R.id.in_num);
+        etOutNum = findViewById(R.id.out_num);
+        etStayNum = findViewById(R.id.stay_num);
 
         cbAlertIn = findViewById(R.id.cb_alertIn);
         cbAlertOut = findViewById(R.id.cb_alertOut);
@@ -483,27 +491,57 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
             default:
                 break;
         }
+
         if (flag1) {
             activatesAction = GeoFenceClient.GEOFENCE_IN;
+            etInNum.setEnabled(true);
+            etOutNum.setEnabled(false);
+            etStayNum.setEnabled(false);
+        } else {
+            etInNum.setEnabled(false);
         }
         if (flag2) {
             activatesAction = GeoFenceClient.GEOFENCE_OUT;
+            etInNum.setEnabled(false);
+            etOutNum.setEnabled(true);
+            etStayNum.setEnabled(false);
+        } else {
+            etOutNum.setEnabled(false);
         }
         if (flag3) {
             activatesAction = GeoFenceClient.GEOFENCE_STAYED;
+            etInNum.setEnabled(false);
+            etOutNum.setEnabled(false);
+            etStayNum.setEnabled(true);
+        } else {
+            etStayNum.setEnabled(false);
         }
         if (flag1 && flag2) {
             activatesAction = GeoFenceClient.GEOFENCE_IN_OUT;
+            etInNum.setEnabled(true);
+            etOutNum.setEnabled(true);
+            etStayNum.setEnabled(false);
         }
         if (flag1 && flag3) {
             activatesAction = GeoFenceClient.GEOFENCE_IN_STAYED;
+            etInNum.setEnabled(true);
+            etOutNum.setEnabled(false);
+            etStayNum.setEnabled(true);
         }
         if (flag2 && flag3) {
             activatesAction = GeoFenceClient.GEOFENCE_OUT_STAYED;
+            etInNum.setEnabled(false);
+            etOutNum.setEnabled(true);
+            etStayNum.setEnabled(true);
         }
         if (flag1 && flag2 && flag3) {
             activatesAction = GeoFenceClient.GEOFENCE_IN_OUT_STAYED;
+            etInNum.setEnabled(true);
+            etOutNum.setEnabled(true);
+            etStayNum.setEnabled(true);
         }
+
+
         if (null != fenceClient) {
             fenceClient.setActivateAction(activatesAction);
         }
@@ -715,7 +753,29 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
         DPoint centerPoint = new DPoint(centerLatLng.latitude,
                 centerLatLng.longitude);
         fenceRadius = Float.parseFloat(radiusStr);
+        setTriggerNum();
         fenceClient.addGeoFence(centerPoint, GeoFenceClient.BD09LL, fenceRadius, customId);
+    }
+
+    private int[] setTriggerNum () {
+        int[] num = new int[3];
+        String in = etInNum.getText().toString();
+        if (!TextUtils.isEmpty(in)) {
+            num[0] = Integer.parseInt(in);
+        }
+        String out = etOutNum.getText().toString();
+        if (!TextUtils.isEmpty(out)) {
+            num[1] = Integer.parseInt(out);
+        }
+        String stay = etStayNum.getText().toString();
+        if (!TextUtils.isEmpty(stay)) {
+            num[2] = Integer.parseInt(stay);
+        }
+        fenceClient.setTriggerCount(num[0], num[1], num[2]);
+        etInNum.setText("");
+        etOutNum.setText("");
+        etStayNum.setText("");
+        return num;
     }
 
     /**
@@ -734,6 +794,7 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
         for (LatLng latLng : polygonPoints) {
             pointList.add(new DPoint(latLng.latitude, latLng.longitude));
         }
+        setTriggerNum();
         fenceClient.addGeoFence(pointList, GeoFenceClient.BD09LL, customId);
     }
 
@@ -759,6 +820,7 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
                     .show();
             return;
         }
+        setTriggerNum();
         fenceClient.addGeoFence(keyword, poiType, city, size, customId);
     }
 
@@ -787,6 +849,7 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
         DPoint centerPoint = new DPoint(centerLatLng.latitude,
                 centerLatLng.longitude);
         float aroundRadius = Float.parseFloat(searchRadiusStr);
+        setTriggerNum();
         fenceClient.addGeoFence(keyword, poiType, centerPoint, GeoFenceClient.BD09LL, aroundRadius,
                 size, customId);
     }
@@ -802,6 +865,7 @@ public class GeoFenceMultipleActivity extends CheckPermissionsActivity
                     .show();
             return;
         }
+        setTriggerNum();
         fenceClient.addGeoFence(keyword, customId);
     }
 
