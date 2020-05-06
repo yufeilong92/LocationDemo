@@ -78,6 +78,7 @@
         <activity android:name="com.baidu.location.demo.SportSceneActivity" />
         <activity android:name="com.baidu.location.demo.TransportSceneActivity" />
         <activity android:name="com.baidu.location.demo.MockLocationActivity" />
+        <activity android:name="com.baidu.location.demo.LocPreventCheatActivity" />
         <activity
             android:name="com.baidu.location.demo.LocationNotifyActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

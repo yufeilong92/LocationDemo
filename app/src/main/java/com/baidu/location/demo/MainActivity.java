@@ -127,18 +127,21 @@ public class MainActivity extends Activity {
                         TargetClass = MockLocationActivity.class;
                         break;
                     case 9:
-                        TargetClass = ForegroundActivity.class;
+                        TargetClass = LocPreventCheatActivity.class;
                         break;
                     case 10:
-                        TargetClass = AssistLocationActivity.class;
+                        TargetClass = ForegroundActivity.class;
                         break;
                     case 11:
-                        TargetClass = LocationNotifyActivity.class;
+                        TargetClass = AssistLocationActivity.class;
                         break;
                     case 12:
-                        TargetClass = IsHotWifiActivity.class;
+                        TargetClass = LocationNotifyActivity.class;
                         break;
                     case 13:
+                        TargetClass = IsHotWifiActivity.class;
+                        break;
+                    case 14:
                         TargetClass = QuestActivity.class;
                         break;
                     default:
@@ -164,6 +167,7 @@ public class MainActivity extends Activity {
         data.add("地理围栏功能");
         data.add("场景定位");
         data.add("仿真定位");
+        data.add("定位防作弊");
         data.add("android 8.0/9.0后台定位示例");
         data.add("H5辅助定位");
         data.add("位置提醒");
