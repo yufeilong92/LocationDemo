@@ -83,10 +83,14 @@ public class MockLocationActivity extends Activity {
             mLocationClient = null;
         }
 
-        if (null != mLocationManager) {
-            mLocationManager.clearTestProviderEnabled(providerName);
-            mLocationManager.removeTestProvider(providerName);
-            mLocationManager = null;
+        try {
+            if (null != mLocationManager) {
+                mLocationManager.clearTestProviderEnabled(providerName);
+                mLocationManager.removeTestProvider(providerName);
+                mLocationManager = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (null != mockData) {
